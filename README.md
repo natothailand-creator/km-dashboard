@@ -3,7 +3,7 @@
 เว็บแยกจาก Helpdesk: Next.js 15 + TypeScript ไม่ใช้ฐานข้อมูล ข้อมูลทั้งหมดอยู่ในไฟล์เดียว `data/km.enc` (เข้ารหัส AES-256-GCM)
 ที่สร้างจากเครื่องคุณ แล้ว push ขึ้น GitHub เหมือนที่ทำกับ Helpdesk ("auto update data")
 
-## ภาพรวม Flow
+## ภาพรวม Flow การท ำงาน
 ```
 [เครื่องคุณ]
  master/KM_Master_Data.xlsx  (Members, Modules, C/P/N, Courses, Settings)
