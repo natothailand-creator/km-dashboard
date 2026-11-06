@@ -1,3 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* สไตล์เดิมของหน้าที่ยังไม่ย้ายไป Tailwind (Skill Matrix, การเรียนของฉัน, เข้าสู่ระบบ) */
+@layer components {
 :root{--bg:#f5f7fa;--card:#fff;--ink:#1a2433;--mute:#667085;--line:#e4e7ec;--brand:#0b3d91;
 --ok:#c6efce;--okt:#1e6b32;--warn:#ffeb9c;--warnt:#7a5b00;--bad:#f8cbad;--badt:#8a2b0b;--info:#bdd7ee;--infot:#16487a}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,"Noto Sans Thai","Sarabun",sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
@@ -27,3 +33,5 @@ tr.grp td{background:#eef2f9;font-weight:600;color:var(--brand)}
 .login{min-height:100vh;display:grid;place-items:center}.login-card{width:340px;display:flex;flex-direction:column;gap:12px}
 .login-card input{font:inherit;padding:9px;border:1px solid var(--line);border-radius:8px}.login-card button{background:var(--brand);color:#fff;border:0;padding:10px}
 .err{color:var(--badt);background:var(--bad);padding:8px;border-radius:8px;font-size:13px}
+
+}

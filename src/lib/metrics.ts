@@ -60,3 +60,45 @@ export function kpis(d: Scoped) {
     singlePoint: rows.filter(r => r.single).length, progress, rows,
   };
 }
+
+/** ชื่อต้นของผู้ที่รู้ Module นี้ (สถานะ C หรือ N) */
+export function knowerNames(d: Scoped, moduleId: string): string[] {
+  return d.memberModules.filter(x => x.moduleId === moduleId && x.status !== 'P')
+    .map(x => d.members.find(m => m.id === x.memberId)?.name.split(' ')[0] ?? x.memberId);
+}
+
+/** Module ที่มีผู้สอบ Post-test (คะแนนครบ) เรียงตามอัตราไม่ผ่านสูงสุด */
+export function failRows(d: Scoped) {
+  return d.modules.filter(m => m.active).flatMap(m => {
+    const pairs = d.memberModules.filter(x => x.moduleId === m.id && x.status !== 'C');
+    const posts = pairs.map(x => bestPost(d, x.memberId, m.id)).filter((r): r is ResultRec => !!r && r.total !== null);
+    if (!posts.length) return [];
+    const failed = posts.filter(r => !r.passed).length;
+    return [{ module: m, examinees: posts.length, failed, rate: failed / posts.length }];
+  }).sort((a, b) => b.rate - a.rate || b.failed - a.failed);
+}
+
+export interface FollowUp { memberId: string; name: string; kind: 'failed' | 'essay' | 'nopre'; issue: string; sort: string }
+/** รายการที่ต้องติดตาม: สอบไม่ผ่าน, รอคะแนนอัตนัย, เลยวัน Pre-test แล้วยังไม่ทำ */
+export function followUps(d: Scoped, today: string): FollowUp[] {
+  const out: FollowUp[] = [];
+  const thaiDate = (iso: string) => new Date(`${iso}T00:00:00`).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
+  for (const x of d.memberModules) {
+    if (x.status !== 'P') continue;
+    const mod = d.modules.find(m => m.id === x.moduleId), mem = d.members.find(m => m.id === x.memberId);
+    if (!mod || !mem || !mod.active) continue;
+    const base = { memberId: mem.id, name: mem.name };
+    const post = bestPost(d, x.memberId, x.moduleId);
+    if (post) {
+      if (post.total === null) out.push({ ...base, kind: 'essay', issue: `รอคะแนนอัตนัย: ${mod.name}`, sort: post.testDate });
+      else if (!post.passed) out.push({ ...base, kind: 'failed', issue: `สอบ Post-test ไม่ผ่าน: ${mod.name} (${Math.round(post.total)} คะแนน)`, sort: post.testDate });
+      continue;
+    }
+    if (preScore(d, x.memberId, x.moduleId) === null) {
+      const date = d.courses.find(c => c.moduleId === mod.id)?.preTestDate;
+      if (date && date < today) out.push({ ...base, kind: 'nopre', issue: `ยังไม่ทำ Pre-test: ${mod.name} (กำหนด ${thaiDate(date)})`, sort: date });
+    }
+  }
+  const order = { failed: 0, essay: 1, nopre: 2 } as const;
+  return out.sort((a, b) => order[a.kind] - order[b.kind] || a.sort.localeCompare(b.sort));
+}
