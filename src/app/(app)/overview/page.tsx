@@ -4,6 +4,7 @@ import { getScopedData } from '@/lib/session';
 import { filterScoped } from '@/lib/filters';
 import { failRows, followUps, kpis, knowerNames, PROGRESS_LABEL } from '@/lib/metrics';
 import { BarCompare, Donut } from '@/components/charts';
+import { FilterBar } from '@/components/FilterBar';
 
 const pct = (a: number, b: number) => (b ? Math.round((a / b) * 100) : 0);
 const COLORS = { notstarted: '#CBD5E1', learning: '#D69E2E', failed: '#E53E3E', done: '#00A859' } as const;
@@ -45,31 +46,7 @@ export default async function Overview({ searchParams }: { searchParams: Promise
 
   return (
     <>
-      {/* ตัวกรอง */}
-      <form method="get" className="bg-white border border-slate-200 rounded-xl px-5 py-3 flex flex-wrap items-center justify-between gap-4 shadow-sm">
-        <div className="flex items-center space-x-2">
-          <i className="fa-solid fa-filter text-axons-blue" />
-          <span className="font-semibold text-slate-700 text-sm">ตัวกรอง:</span>
-        </div>
-        <div className="flex flex-wrap items-center gap-3 text-xs">
-          <label className="flex items-center bg-slate-100 rounded-lg px-3 py-1.5 border border-slate-200">
-            <i className="fa-solid fa-cube text-slate-400 mr-2" />
-            <select name="product" defaultValue={filters.product ?? ''} className="bg-transparent font-medium text-slate-700 focus:outline-none cursor-pointer">
-              <option value="">ทุก Product ({products.length})</option>
-              {products.map(p => <option key={p} value={p}>{p}</option>)}
-            </select>
-          </label>
-          <label className="flex items-center bg-slate-100 rounded-lg px-3 py-1.5 border border-slate-200">
-            <i className="fa-solid fa-users text-slate-400 mr-2" />
-            <select name="team" defaultValue={filters.team ?? ''} className="bg-transparent font-medium text-slate-700 focus:outline-none cursor-pointer">
-              <option value="">ทุกทีม</option>
-              {teams.map(t => <option key={t} value={t}>{t}</option>)}
-            </select>
-          </label>
-          <button type="submit" className="bg-axons-blue text-white text-xs px-4 py-1.5 rounded-lg font-medium hover:bg-axons-blueDark transition border-0">ใช้ตัวกรอง</button>
-          <Link href="/overview" className="text-axons-blue hover:underline font-medium text-xs px-2 py-1"><i className="fa-solid fa-rotate-left mr-1" />รีเซ็ต</Link>
-        </div>
-      </form>
+      <FilterBar action="/overview" products={products} teams={teams} product={filters.product} team={filters.team} />
 
       <div>
         <h1 className="text-2xl font-bold text-slate-800">ภาพรวมความรู้และทักษะทีม (Team Overview)</h1>
