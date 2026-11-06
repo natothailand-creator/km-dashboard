@@ -1,0 +1,12 @@
+node_modules
+.next
+.env*
+!.env.example
+# ข้อมูลดิบและรหัสผ่านอยู่ในเครื่องเท่านั้น ห้ามขึ้น GitHub
+master/
+imports/
+data/results.json
+data/users.local.json
+data/initial-passwords.csv
+*.xlsx
+next-env.d.ts
