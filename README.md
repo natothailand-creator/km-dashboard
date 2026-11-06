@@ -1,9 +1,9 @@
 # KM Dashboard (เว็บกลาง ข้อมูลเข้ารหัส กรองสิทธิ์ที่เซิร์ฟเวอร์)
 
-เว็บแยกจาก Helpdesk: Next.js 15 + TypeScript ไม่ใช้ฐานข้อมูล ข้อมูลทั้งหมดอยู่ในไฟล์เดียว `data/km.enc` (เข้ารหัส AES-256-GCM)
+เว็บแยกจาก Helpdesk: Next.js 15 + TypeScript + Tailwind v3 (หน้าตาตามต้นแบบ Gemini ย้ายทีละหน้า) ไม่ใช้ฐานข้อมูล ข้อมูลทั้งหมดอยู่ในไฟล์เดียว `data/km.enc` (เข้ารหัส AES-256-GCM)
 ที่สร้างจากเครื่องคุณ แล้ว push ขึ้น GitHub เหมือนที่ทำกับ Helpdesk ("auto update data")
 
-## ภาพรวม Flow การท ำงาน
+## ภาพรวม Flow
 ```
 [เครื่องคุณ]
  master/KM_Master_Data.xlsx  (Members, Modules, C/P/N, Courses, Settings)
@@ -56,3 +56,9 @@
 ## หน้าจอที่เหลือ (ต่อจากนี้)
 /modules/[id] (ก่อน-หลังเรียน, การกระจายคะแนน), /members/[id] (โปรไฟล์ + Timeline), /results, /courses, ตัวกรองไตรมาส/ทีม
 นอกรอบแรก: หน้าตรวจอัตนัยในเว็บ, วิเคราะห์ข้อสอบรายข้อ, ปุ่มเตือน/มอบหมาย
+
+## หน้าตา (ย้ายจากต้นแบบ Gemini ทีละหน้า)
+- ย้ายแล้ว: ภาพรวมทีม (`src/app/(app)/overview/page.tsx`) และเมนูข้าง/โครงหน้า (`src/app/(app)/layout.tsx`)
+- ยังเป็นสไตล์เดิม: Skill Matrix, การเรียนของฉัน, หน้าเข้าสู่ระบบ
+- ใช้ Tailwind ชุดสีเดียวกับต้นแบบ (`tailwind.config.ts` คลาส `axons-*`) จึงนำ HTML ของ Gemini มาแปลงเป็น JSX แล้วแทนตัวเลขตัวอย่างด้วยข้อมูลจริงจาก `getScopedData()` ได้
+- ฟอนต์ Prompt และไอคอน Font Awesome โหลดจาก Google Fonts / cdnjs ตอนเปิดหน้า (เหมือนต้นแบบ) ถ้าเครือข่ายบริษัทบล็อก จะใช้ฟอนต์สำรองและไม่มีไอคอน
